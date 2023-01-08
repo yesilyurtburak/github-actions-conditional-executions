@@ -11,10 +11,10 @@ jobs:
         operating-system: [ubuntu-latest, windows-latest] # custom name
         include: # build this combination standalone(ubuntu-latest, 18)
           - node-version: 18
-          - operating-system: ubuntu-latest
+            operating-system: ubuntu-latest
         exclude: # don't build this combination (windows-latest, 14)
           - node-version: 14
-          - operating-system: windows-latest
+            operating-system: windows-latest
     runs-on: ${{ matrix.operating-system }} # access via "matrix" context
     steps:
       - name: Get Code
