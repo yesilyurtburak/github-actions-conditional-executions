@@ -10,12 +10,13 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: Cache dependencies
-        id: cache
+        id: cache # use this for conditional check for dependency setup
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules # check if local node_modules cached instead of internal .npm folder
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true' # context.<id>.outputs.cache-hit != 'true' (not cached)
         run: npm ci
       - name: Lint code
         run: npm run lint
@@ -25,12 +26,13 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: Cache dependencies
-        id: cache
+        id: cache # use this for conditional check for dependency setup
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules # check if local node_modules cached instead of internal .npm folder
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true' # context.<id>.outputs.cache-hit != 'true' (not cached)
         run: npm ci
       - name: Test code
         id: run-tests # added an 'id' to this step to reach it in 'if' block below.
@@ -48,12 +50,13 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: Cache dependencies
-        id: cache
+        id: cache # use this for conditional check for dependency setup
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules # check if local node_modules cached instead of internal .npm folder
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true' # context.<id>.outputs.cache-hit != 'true' (not cached)
         run: npm ci
       - name: Build website
         id: build-website
