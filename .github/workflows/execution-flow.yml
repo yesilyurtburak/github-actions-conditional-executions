@@ -33,8 +33,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Test code
+        id: run-tests # added an 'id' to this step to reach it in 'if' block below.
         run: npm run test
-      - name: Upload test report
+      - name: Upload test report # we want this step runs if the previous step fails.
+        if: failure() && steps.run-tests.outcome == 'failure' # conditions
         uses: actions/upload-artifact@v3
         with:
           name: test-report
