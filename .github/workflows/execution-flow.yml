@@ -75,3 +75,12 @@ jobs:
         run: ls
       - name: Deploy
         run: echo "Deploying..."
+  report: # added this job. This job runs only if we have at least 1 failure in previous steps.
+    needs: [lint, deploy] # This job waits for the [lint, deploy] jobs to be completed.
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output information # we want to report if general workflow fails.
+        run: | 
+          echo "Something went wrong"
+          echo "${{ toJSON(github) }}"
