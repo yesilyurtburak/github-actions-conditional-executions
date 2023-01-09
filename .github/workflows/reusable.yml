@@ -7,8 +7,17 @@ on:
         required: false
         default: dist # use this as artifact-name if no input provided.
         type: string
+    outputs: # we can return a value from this reusable workflow.
+      result: # custom name
+        description: The result of the deployment operation
+        value: ${{ jobs.deploy.outputs.outcome }} # access the return value of job and assign it to return value of workflow.
+    # secrets: # if this workflow needs a secret somewhere in it, we can specify like this.
+    #   some-secret: # secret's name for example.
+    #     required: false
 jobs:
   deploy:
+    outputs:
+      outcome: ${{ steps.set-result.outputs.step-result }}  # access via 'steps' context.
     runs-on: ubuntu-latest
     steps:
       # Get the uploaded files which are provided in 'use-reuse.yml' file, however we are doing better.
@@ -19,3 +28,6 @@ jobs:
           name: ${{ inputs.artifact-name }}  # access via 'inputs' context.
       - name: Output information
         run: echo "Deploying & Uploading..."
+      - name: Set result output
+        id: set-result
+        run: echo "step-result=success" >> $GITHUB_OUTPUT # create a key named 'step-result' and assign a 'success' value. 

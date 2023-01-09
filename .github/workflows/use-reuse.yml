@@ -71,6 +71,14 @@ jobs:
     uses: ./.github/workflows/reusable.yml # calling a workflow we defined.
     with:
       artifact-name: dist-files # input value for reusable workflow.
+    # secrets: # You can also send a secret value to reusable workflow.
+    #   some-secret: ${{ secrets.some-secret }}
+  print-deploy-result:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print deploy output
+        run: echo "${{ needs.deploy.outputs.result }}" # access via 'needs' context.
   report:
     needs: [lint, deploy]
     if: failure()
