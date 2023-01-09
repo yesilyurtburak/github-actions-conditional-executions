@@ -1,8 +1,21 @@
 name: Reusable Deploy
-on: workflow_call # we want to call this workflow inside of other workflows.
+on: 
+  workflow_call: # we want to call this workflow inside of other workflows.
+    inputs: # we want to accept an input from other workflows which are the caller.
+      artifact-name: # custom name (same name must be used with the caller)
+        description: The name of the deployable artifact files
+        required: false
+        default: dist # use this as artifact-name if no input provided.
+        type: string
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      # Get the uploaded files which are provided in 'use-reuse.yml' file, however we are doing better.
+      # We have defined the artifact file name dynamically. We can use this with any workflow from now on.
+      - name: Get artifact files
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact-name }}  # access via 'inputs' context.
       - name: Output information
         run: echo "Deploying & Uploading..."
